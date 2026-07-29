@@ -62,7 +62,7 @@ fun HomeScreen(
             ) {
                 Column {
                     Text(
-                        text = "REALITY VPN",
+                        text = "CYBER TECH",
                         color = CyberTextPrimary,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Black,
