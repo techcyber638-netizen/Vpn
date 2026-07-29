@@ -12,6 +12,8 @@ plugins {
 android {
   namespace = "com.example"
   compileSdk = 35
+  
+
 
   defaultConfig {
     applicationId = "com.aistudio.cybertech.vpn"

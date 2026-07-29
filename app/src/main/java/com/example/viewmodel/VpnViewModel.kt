@@ -83,7 +83,7 @@ class VpnViewModel(application: Application) : AndroidViewModel(application) {
         VpnEngine.log("Selected target server: ${server.name} [${server.protocol} / ${server.serverAddress}]")
     }
 
-    fun toggleConnect() {
+    fun toggleConnect(context: android.content.Context) {
         val current = connectionState.value
         val server = selectedServer.value ?: return
 
@@ -109,10 +109,8 @@ class VpnViewModel(application: Application) : AndroidViewModel(application) {
             }
         } else {
             VpnEngine.connect(
-                serverName = server.name,
-                protocol = server.protocol,
-                sni = server.sni.ifEmpty { server.serverAddress },
-                fingerprint = server.fingerprint
+                context = context,
+                server = server
             )
         }
     }

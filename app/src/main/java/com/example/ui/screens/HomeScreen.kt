@@ -186,9 +186,10 @@ fun HomeScreen(
                     .padding(vertical = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val context = androidx.compose.ui.platform.LocalContext.current
                 CyberConnectButton(
                     connectionState = connectionState,
-                    onClick = { viewModel.toggleConnect() }
+                    onClick = { viewModel.toggleConnect(context) }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

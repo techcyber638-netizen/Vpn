@@ -93,30 +93,27 @@ object VpnEngine {
         _logs.value = current
     }
 
-    fun connect(serverName: String, protocol: String, sni: String, fingerprint: String) {
-        if (_connectionState.value == ConnectionState.CONNECTED || _connectionState.value == ConnectionState.CONNECTING) return
-
-        connectionJob?.cancel()
-        connectionJob = scope.launch {
-            _connectionState.value = ConnectionState.CONNECTING
-            log("Initiating outbound tunnel to: $serverName")
-            log("Configuring protocol: $protocol | Security: Reality")
-            log("Setting SNI: $sni | uTLS Fingerprint: $fingerprint")
-
-            delay(600)
-            log("[REALITY] Performing Noise Handshake with $sni...")
-            delay(500)
-            log("[UTLS] Client Hello sent ($fingerprint profile)")
-            delay(400)
-            log("[XRAY] VLESS Vision flow established. Tunnel active!")
-
-            _connectionState.value = ConnectionState.CONNECTED
+    fun updateState(state: ConnectionState) {
+        _connectionState.value = state
+        if (state == ConnectionState.CONNECTED) {
             _sessionDurationSeconds.value = 0L
             _sessionDownloadMb.value = 0.0
             _sessionUploadMb.value = 0.0
-
             startSessionTracking()
         }
+    }
+
+    fun connect(context: android.content.Context, server: com.example.data.VpnServer) {
+        if (_connectionState.value == ConnectionState.CONNECTED || _connectionState.value == ConnectionState.CONNECTING) return
+        
+        _connectionState.value = ConnectionState.CONNECTING
+        log("Initiating Reality tunnel to: ${server.name}")
+        
+        val intent = android.content.Intent(context, RealityVpnService::class.java).apply {
+            putExtra("SERVER_ADDRESS", server.serverAddress)
+            putExtra("CONFIG_JSON", "{}") 
+        }
+        context.startService(intent)
     }
 
     fun disconnect() {
